@@ -1,0 +1,6 @@
+@g4api_HostAddress = http://localhost:5230
+
+GET {{g4api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
