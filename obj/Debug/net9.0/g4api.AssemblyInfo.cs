@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("g4api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+40a581004db32324c51310506f6a18741a47584c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fa100fd4a3cc78ca4b93e2718ee4787b70a2883b")]
 [assembly: System.Reflection.AssemblyProductAttribute("g4api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("g4api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
