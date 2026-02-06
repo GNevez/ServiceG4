@@ -9,7 +9,7 @@ public class ProdutoDto
     public string Slug { get; set; } = "";
     public string? Descricao { get; set; }
     public string Marca { get; set; } = "";
-    public string? Grupo { get; set; }
+    public int? Grupo { get; set; }
     public string? Referencia { get; set; }
     public decimal Preco { get; set; }
     public decimal? PrecoOriginal { get; set; }
@@ -35,7 +35,7 @@ public class ProdutoDetalhadoDto
     public string? AplicacaoConsulta { get; set; }
     public string? DadosAdicionais { get; set; }
     public string Marca { get; set; } = "";
-    public string? Grupo { get; set; }
+    public int? Grupo { get; set; }
     public decimal Preco { get; set; }
     public decimal? PrecoOriginal { get; set; }
     public int? Desconto { get; set; }
@@ -93,7 +93,7 @@ public class ProdutoCreateDto
     public string Nome { get; set; } = "";
     public string? Descricao { get; set; }
     public string? Marca { get; set; }
-    public string? Grupo { get; set; }
+    public int? Grupo { get; set; }
     public string? Referencia { get; set; }
     public decimal PrecoTabela { get; set; }
     public decimal PrecoMinimo { get; set; }
@@ -113,7 +113,7 @@ public class ProdutoUpdateDto
     public string? Nome { get; set; }
     public string? Descricao { get; set; }
     public string? Marca { get; set; }
-    public string? Grupo { get; set; }
+    public int? Grupo { get; set; }
     public string? Referencia { get; set; }
     public decimal? PrecoTabela { get; set; }
     public decimal? PrecoMinimo { get; set; }
@@ -247,7 +247,7 @@ public class ProdutoComGradeCreateDto
     public string Nome { get; set; } = "";
     public string? Descricao { get; set; }
     public string? Marca { get; set; }
-    public string? Grupo { get; set; }
+    public int? Grupo { get; set; }
     public string Referencia { get; set; } = "";
     public decimal PrecoTabela { get; set; }
     public decimal PrecoMinimo { get; set; }
