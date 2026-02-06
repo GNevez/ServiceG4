@@ -1,8 +1,8 @@
-name: Deploy API - Produção
+name: Deploy API - Homologação
 
 on:
   push:
-    branches: [production]
+    branches: [release]
   workflow_dispatch:
 
 env:
@@ -33,8 +33,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
-            type=sha,prefix=prod-
+            type=raw,value=hom
+            type=sha,prefix=hom-
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -56,15 +56,15 @@ jobs:
           username: ${{ secrets.ICONTAINER_USER }}
           key: ${{ secrets.ICONTAINER_SSH_KEY }}
           script: |
-            docker pull ghcr.io/gnevez/serviceg4:latest
-            docker stop g4api || true
-            docker rm g4api || true
+            docker pull ghcr.io/gnevez/serviceg4:hom
+            docker stop g4api-hom || true
+            docker rm g4api-hom || true
             docker run -d \
-              --name g4api \
+              --name g4api-hom \
               --restart unless-stopped \
               --network bridge \
-              -p 5006:5006 \
-              -e ASPNETCORE_ENVIRONMENT=Production \
+              -p 5007:5006 \
+              -e ASPNETCORE_ENVIRONMENT=Homologation \
               -e ASPNETCORE_URLS=http://+:5006 \
-              -v /var/www/g4/wwwroot/img:/app/wwwroot/img \
-              ghcr.io/gnevez/serviceg4:latest
+              -v /var/www/g4-hom/wwwroot/img:/app/wwwroot/img \
+              ghcr.io/gnevez/serviceg4:hom
