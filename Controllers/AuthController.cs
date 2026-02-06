@@ -42,9 +42,10 @@ public class AuthController : ControllerBase
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 Expires = DateTimeOffset.UtcNow.AddDays(7),
-                Path = "/"
+                Path = "/",
+                Domain = ".g4motocenter.com.br"
             };
 
             Response.Cookies.Append("auth_token", token, cookieOptions);
@@ -123,8 +124,9 @@ public class AuthController : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Lax,
-            Path = "/"
+            SameSite = SameSiteMode.None,
+            Path = "/",
+            Domain = ".g4motocenter.com.br"
         });
 
         return Ok(new { success = true, message = "Logout realizado com sucesso" });
