@@ -102,9 +102,14 @@ builder.Services.AddCors(options =>
                 "https://g4motocenter.com.br",
                 "https://www.g4motocenter.com.br",
                 "https://painel.g4motocenter.com.br",
-                // Homologação
+                "https://api.g4motocenter.com.br",
+                // Homologação (HTTP e HTTPS)
+                "http://hom.g4motocenter.com.br",
+                "http://painel.hom.g4motocenter.com.br",
+                "http://api.hom.g4motocenter.com.br",
                 "https://hom.g4motocenter.com.br",
-                "https://painel.hom.g4motocenter.com.br"
+                "https://painel.hom.g4motocenter.com.br",
+                "https://api.hom.g4motocenter.com.br"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -113,7 +118,8 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Swagger habilitado em Development e Homologation
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Homologation")
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -122,7 +128,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// HTTPS redirect apenas em produção
+if (!app.Environment.IsDevelopment() && app.Environment.EnvironmentName != "Homologation")
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseStaticFiles();
 
