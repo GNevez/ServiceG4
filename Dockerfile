@@ -28,4 +28,4 @@ ENV ASPNETCORE_URLS=http://+:5006
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 # Comando de inicialização
-ENTRYPOINT ["dotnet", "cafApi.dll"]
+ENTRYPOINT ["dotnet", "g4api.dll"]
