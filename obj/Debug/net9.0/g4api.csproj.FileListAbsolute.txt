@@ -134,3 +134,5 @@ C:\Documentos\Projetos\g4\g4api\bin\Debug\net9.0\Microsoft.IdentityModel.Protoco
 C:\Documentos\Projetos\g4\g4api\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Documentos\Projetos\g4\g4api\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Documentos\Projetos\g4\g4api\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Documentos\Projetos\g4\g4api\bin\Debug\net9.0\appsettings.Homologation.json
+C:\Documentos\Projetos\g4\g4api\obj\Debug\net9.0\g4api.sourcelink.json

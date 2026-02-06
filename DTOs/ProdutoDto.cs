@@ -168,7 +168,7 @@ public class ProdutoListResponse
 public class ProdutoBuscaParams
 {
     public string? Termo { get; set; }
-    public string? Grupo { get; set; }
+    public int? GrupoId { get; set; }
     public string? Marca { get; set; }
     public decimal? PrecoMin { get; set; }
     public decimal? PrecoMax { get; set; }

@@ -15,7 +15,7 @@ public class CorrigirCaminhosResult
 public interface IProdutoService
 {
     Task<ProdutoListResponse> GetProdutosAsync(ProdutoBuscaParams parametros);
-    Task<ProdutoPaginatedResponse> GetProdutosPaginadosAsync(int pageNumber, int pageSize, string? grupo, string? cor, decimal? precoMin, decimal? precoMax, string? ordenacao);
+    Task<ProdutoPaginatedResponse> GetProdutosPaginadosAsync(int pageNumber, int pageSize, int? grupoId, string? cor, decimal? precoMin, decimal? precoMax, string? ordenacao);
     Task<IEnumerable<ProdutoDto>> GetProdutosAleatoriosAsync(int quantidade = 10);
     Task<ProdutoListResponse> GetProdutosAtivosAsync(ProdutoBuscaParams parametros);
     Task<ProdutoListResponse> GetProdutosInativosAsync(ProdutoBuscaParams parametros);
@@ -24,6 +24,8 @@ public interface IProdutoService
     Task<ProdutoDto?> GetProdutoByReferenciaAsync(string referencia);
     Task<ProdutoDetalhadoDto?> GetProdutoDetalhadoAsync(string referencia);
     Task<IEnumerable<ProdutoDto>> GetProdutosByGrupoAsync(string grupo, int quantidade = 20);
+    Task<IEnumerable<ProdutoDto>> GetProdutosByGrupoIdAsync(int grupoId, int quantidade = 20);
+    Task<IEnumerable<ProdutoDto>> GetProdutosBySubGrupoIdAsync(int subGrupoId, int quantidade = 20);
     Task<IEnumerable<string>> GetGruposDistintosAsync();
     Task<IEnumerable<string>> GetMarcasDistintasAsync();
     Task<IEnumerable<ProdutoSearchDto>> SearchAsync(string termo, int limit = 8);

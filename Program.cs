@@ -95,10 +95,16 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
+                // Desenvolvimento
                 "http://localhost:3000",
                 "http://localhost:3001",
+                // Produção
                 "https://g4motocenter.com.br",
-                "https://www.g4motocenter.com.br"
+                "https://www.g4motocenter.com.br",
+                "https://painel.g4motocenter.com.br",
+                // Homologação
+                "https://hom.g4motocenter.com.br",
+                "https://painel.hom.g4motocenter.com.br"
             )
             .AllowAnyHeader()
             .AllowAnyMethod()

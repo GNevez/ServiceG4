@@ -14,7 +14,7 @@ public class Produto
     public int? CodigoProduto { get; set; }
 
     [Column("grupoProduto")]
-    public string? GrupoProduto { get; set; }
+    public int? GrupoProduto { get; set; }
 
     [Column("referenciaProduto")]
     public string? ReferenciaProduto { get; set; }

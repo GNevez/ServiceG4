@@ -34,8 +34,8 @@ public class ProdutoService : IProdutoService
                 (x.Fabricante != null && x.Fabricante.ToLower().Contains(termo)));
         }
 
-        if (!string.IsNullOrEmpty(p.Grupo))
-            query = query.Where(x => x.GrupoProduto != null && x.GrupoProduto.ToLower() == p.Grupo.ToLower());
+        if (p.GrupoId.HasValue)
+            query = query.Where(x => x.GrupoProduto == p.GrupoId.Value);
 
         if (!string.IsNullOrEmpty(p.Marca))
             query = query.Where(x => x.Fabricante != null && x.Fabricante.ToLower() == p.Marca.ToLower());
@@ -114,8 +114,8 @@ public class ProdutoService : IProdutoService
                 (x.Fabricante != null && x.Fabricante.ToLower().Contains(termo)));
         }
 
-        if (!string.IsNullOrEmpty(p.Grupo))
-            query = query.Where(x => x.GrupoProduto != null && x.GrupoProduto.ToLower() == p.Grupo.ToLower());
+        if (p.GrupoId.HasValue)
+            query = query.Where(x => x.GrupoProduto == p.GrupoId.Value);
 
         if (!string.IsNullOrEmpty(p.Marca))
             query = query.Where(x => x.Fabricante != null && x.Fabricante.ToLower() == p.Marca.ToLower());
@@ -192,8 +192,8 @@ public class ProdutoService : IProdutoService
                 (x.Fabricante != null && x.Fabricante.ToLower().Contains(termo)));
         }
 
-        if (!string.IsNullOrEmpty(p.Grupo))
-            query = query.Where(x => x.GrupoProduto != null && x.GrupoProduto.ToLower() == p.Grupo.ToLower());
+        if (p.GrupoId.HasValue)
+            query = query.Where(x => x.GrupoProduto == p.GrupoId.Value);
 
         if (!string.IsNullOrEmpty(p.Marca))
             query = query.Where(x => x.Fabricante != null && x.Fabricante.ToLower() == p.Marca.ToLower());
@@ -453,48 +453,47 @@ public class ProdutoService : IProdutoService
     public async Task<IEnumerable<ProdutoDto>> GetProdutosByGrupoAsync(string grupo, int quantidade = 20)
     {
         var grupoNormalizado = grupo.ToLower().Trim();
-        
-        // Busca no ProdutoGrupos
+
+        // Busca o grupo pelo nome para pegar o ID
         var produtoGrupo = await _context.ProdutoGrupos
             .FirstOrDefaultAsync(g => g.DescricaoGrupoProduto != null && 
                                       g.DescricaoGrupoProduto.ToLower() == grupoNormalizado);
-        
-        // Busca também no ProdutoSubGrupos
-        var produtoSubGrupo = await _context.ProdutoSubGrupos
-            .FirstOrDefaultAsync(s => s.DescricaoSubGrupoProduto != null && 
-                                      s.DescricaoSubGrupoProduto.ToLower() == grupoNormalizado);
-        
-        string? codigoGrupo = null;
-        string? codigoSubGrupo = null;
-        
-        if (produtoGrupo != null && !string.IsNullOrEmpty(produtoGrupo.DescricaoGrupoProduto))
-        {
-            var descricao = produtoGrupo.DescricaoGrupoProduto.TrimEnd('s', 'S');
-            codigoGrupo = descricao.ToUpper();
-        }
-        
-        if (produtoSubGrupo != null && !string.IsNullOrEmpty(produtoSubGrupo.DescricaoSubGrupoProduto))
-        {
-            var descricao = produtoSubGrupo.DescricaoSubGrupoProduto.TrimEnd('s', 'S');
-            codigoSubGrupo = descricao.ToUpper();
-        }
-        
+
+        if (produtoGrupo == null)
+            return Enumerable.Empty<ProdutoDto>();
+
+        // Usa o método por ID
+        return await GetProdutosByGrupoIdAsync(produtoGrupo.IdProdutoGrupo, quantidade);
+    }
+
+    public async Task<IEnumerable<ProdutoDto>> GetProdutosByGrupoIdAsync(int grupoId, int quantidade = 20)
+    {
+        // Busca todos os subGrupos desse grupo
+        var subGrupoIds = await _context.ProdutoSubGrupos
+            .Where(sg => sg.IdProdutoGrupo == grupoId)
+            .Select(sg => sg.IdProdutoSubGrupo)
+            .ToListAsync();
+
+        // GrupoProduto na tabela produto referencia o SubGrupo
         var produtos = await _context.Produtos
-            .Where(p => p.GrupoProduto != null && 
-                        !string.IsNullOrEmpty(p.TituloEcommerceProduto) && 
-                        p.PrecoMinimoProduto > 0 &&
-                        (
-                            // Comparação case-insensitive direta
-                            p.GrupoProduto.ToLower() == grupoNormalizado ||
-                            p.GrupoProduto.ToUpper() == grupoNormalizado.ToUpper() ||
-                            // Comparação com código do grupo
-                            (codigoGrupo != null && p.GrupoProduto.ToUpper() == codigoGrupo) ||
-                            // Comparação com código do subgrupo
-                            (codigoSubGrupo != null && p.GrupoProduto.ToUpper() == codigoSubGrupo) ||
-                            // Busca parcial
-                            p.GrupoProduto.ToLower().Contains(grupoNormalizado.TrimEnd('s')) ||
-                            grupoNormalizado.Contains(p.GrupoProduto.ToLower())
-                        ))
+            .Where(p => p.GrupoProduto != null &&
+                        subGrupoIds.Contains(p.GrupoProduto.Value) &&
+                        !string.IsNullOrEmpty(p.TituloEcommerceProduto) &&
+                        p.PrecoMinimoProduto > 0)
+            .OrderBy(p => Guid.NewGuid())
+            .Take(quantidade)
+            .ToListAsync();
+
+        return produtos.Select(MapToDto);
+    }
+
+    public async Task<IEnumerable<ProdutoDto>> GetProdutosBySubGrupoIdAsync(int subGrupoId, int quantidade = 20)
+    {
+        // GrupoProduto na tabela produto referencia o SubGrupo
+        var produtos = await _context.Produtos
+            .Where(p => p.GrupoProduto == subGrupoId &&
+                        !string.IsNullOrEmpty(p.TituloEcommerceProduto) &&
+                        p.PrecoMinimoProduto > 0)
             .OrderBy(p => Guid.NewGuid())
             .Take(quantidade)
             .ToListAsync();
@@ -505,8 +504,8 @@ public class ProdutoService : IProdutoService
     public async Task<IEnumerable<string>> GetGruposDistintosAsync()
     {
         return await _context.Produtos
-            .Where(p => !string.IsNullOrEmpty(p.GrupoProduto))
-            .Select(p => p.GrupoProduto!)
+            .Where(p => p.GrupoProduto.HasValue)
+            .Select(p => p.GrupoProduto!.Value.ToString())
             .Distinct()
             .OrderBy(g => g)
             .ToListAsync();
@@ -523,7 +522,7 @@ public class ProdutoService : IProdutoService
     }
 
     public async Task<ProdutoPaginatedResponse> GetProdutosPaginadosAsync(
-        int pageNumber, int pageSize, string? grupo, string? cor, 
+        int pageNumber, int pageSize, int? grupoId, string? cor,
         decimal? precoMin, decimal? precoMax, string? ordenacao)
     {
         var query = _context.Produtos
@@ -531,8 +530,8 @@ public class ProdutoService : IProdutoService
             .AsQueryable();
 
         // Filtro por grupo
-        if (!string.IsNullOrEmpty(grupo))
-            query = query.Where(p => p.GrupoProduto != null && p.GrupoProduto.ToLower() == grupo.ToLower());
+        if (grupoId.HasValue)
+            query = query.Where(p => p.GrupoProduto == grupoId.Value);
 
         // Filtro por cor
         if (!string.IsNullOrEmpty(cor))

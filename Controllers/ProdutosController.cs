@@ -40,7 +40,7 @@ public class ProdutosController : ControllerBase
     public async Task<ActionResult<ProdutoPaginatedResponse>> GetPaginatedProdutos(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 12,
-        [FromQuery] string? grupoId = null,
+        [FromQuery] int? grupoId = null,
         [FromQuery] string? corId = null,
         [FromQuery] decimal? precoMin = null,
         [FromQuery] decimal? precoMax = null,
@@ -107,6 +107,20 @@ public class ProdutosController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetProdutosByGrupo(string grupo, [FromQuery] int quantidade = 20)
     {
         var produtos = await _produtoService.GetProdutosByGrupoAsync(grupo, quantidade);
+        return Ok(produtos);
+    }
+
+    [HttpGet("grupo/id/{grupoId:int}")]
+    public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetProdutosByGrupoId(int grupoId, [FromQuery] int quantidade = 20)
+    {
+        var produtos = await _produtoService.GetProdutosByGrupoIdAsync(grupoId, quantidade);
+        return Ok(produtos);
+    }
+
+    [HttpGet("subgrupo/id/{subGrupoId:int}")]
+    public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetProdutosBySubGrupoId(int subGrupoId, [FromQuery] int quantidade = 20)
+    {
+        var produtos = await _produtoService.GetProdutosBySubGrupoIdAsync(subGrupoId, quantidade);
         return Ok(produtos);
     }
 
